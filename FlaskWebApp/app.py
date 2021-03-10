@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, abort
 from flask_mysqldb import MySQL
 from flask_bootstrap import Bootstrap
 import yaml
@@ -40,6 +40,22 @@ def employees():
     if result > 0:
         data = cur.fetchall()
         return render_template('employees.html', employees = data)
+
+@app.route('/login/<name>/<password>', methods=['GET','POST'])
+def login(name, password):
+    if (name == 'admin' and password == 'admin'):
+        return redirect(url_for('admin'))
+    else:
+        # abort(401) #yetkisiz istek durumu
+        return redirect(url_for('register'))
+
+@app.route('/register')
+def register():
+    return "This is register page"
+
+@app.route('/admin')
+def admin():
+    return "This is admin dashboard"
 
 @app.route('/static')
 def static_image():
