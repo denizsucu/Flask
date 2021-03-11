@@ -32,7 +32,7 @@ def index():
     
     return render_template('index.html') # Get durumunda çalışacak bu satır
 
-@app.route('/employees')
+@app.route('/employees', methods=['GET'])
 def employees():
     cur = mysql.connection.cursor()
     result = cur.execute("SELECT * FROM employee")
@@ -41,22 +41,31 @@ def employees():
         data = cur.fetchall()
         return render_template('employees.html', employees = data)
 
-@app.route('/login/<name>/<password>', methods=['GET','POST'])
-def login(name, password):
-    if (name == 'admin' and password == 'admin'):
-        return redirect(url_for('admin'))
-    else:
-        # abort(401) #yetkisiz istek durumu
-        return redirect(url_for('register'))
+@app.route('/dashboard/<uname>', methods=['GET'])
+def dashboard(uname):
+    return render_template('dashboard.html', username = uname)
 
-@app.route('/register')
+@app.route('/error', methods=['GET'])
+def error():
+    return render_template('error.html')
+    
+
+# @app.route('/login/<name>/<password>', methods=['GET','POST']) #bu şekilde name- pwd alınmaz örnek sadece
+# def login(name, password):
+#     if (name == 'admin' and password == 'admin'):
+#         return redirect(url_for('admin'))
+#     else:
+#         # abort(401) #yetkisiz istek durumu
+#         return redirect(url_for('register'))
+
+@app.route('/register', methods=['GET'])
 def register():
     return "This is register page"
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET'])
 def admin():
     return "This is admin dashboard"
 
-@app.route('/static')
+@app.route('/static', methods=['GET'])
 def static_image():
     return render_template('static.html')
